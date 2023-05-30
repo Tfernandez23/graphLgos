@@ -10,9 +10,8 @@ archivo = st.file_uploader("Cargar archivo de texto (.txt)", type=["txt"])
 
 # Verificar si se ha cargado un archivo
 if archivo is not None:
-    # Leer el archivo de texto
-    with open(archivo.name, 'r') as file:
-        lines = file.readlines()
+    # Leer el contenido del archivo
+    lines = archivo.read().decode('utf-8').splitlines()
 
     # Encontrar la línea que contiene los encabezados de los datos
     for i, line in enumerate(lines):
@@ -78,8 +77,7 @@ else:
 
 if archivo is not None:
     # Leer el archivo de texto
-    with open(archivo.name, 'r') as file:
-        lines = file.readlines()
+    lines = archivo.read().decode('utf-8').splitlines()
 
     # Encontrar las líneas que contienen los datos de battery status
     battery_lines = [line.strip().split(";") for line in lines if "BATTERY STATUS" in line]
@@ -110,8 +108,7 @@ else:
 
 if archivo is not None:
     # Leer el archivo de texto
-    with open(archivo.name, 'r') as file:
-        lines = file.readlines()
+    lines = archivo.read().decode('utf-8').splitlines()
 
     # Encontrar la línea que contiene los eventos
     for i, line in enumerate(lines):
