@@ -72,10 +72,7 @@ if archivo is not None:
 
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
-else:
-    st.write(" ")
-
-if archivo is not None:
+    
     # Leer el archivo de texto
     lines = archivo.read().decode('utf-8').splitlines()
 
@@ -103,10 +100,7 @@ if archivo is not None:
 
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
-else:
-    st.write("Por favor, carga un archivo de texto.")
 
-if archivo is not None:
     # Leer el archivo de texto
     lines = archivo.read().decode('utf-8').splitlines()
 
