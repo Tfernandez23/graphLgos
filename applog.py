@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-st.title('Visualización  de Logs')
+st.title('Vissualización de Logs')
 
 # Ruta del archivo de texto
 archivo = st.file_uploader("Cargar archivo de texto (.txt)", type=["txt"])
@@ -72,9 +72,6 @@ if archivo is not None:
 
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
-    
-    # Leer el archivo de texto
-    lines = archivo.read().decode('utf-8').splitlines()
 
     # Encontrar las líneas que contienen los datos de battery status
     battery_lines = [line.strip().split(";") for line in lines if "BATTERY STATUS" in line]
@@ -100,9 +97,6 @@ if archivo is not None:
 
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
-
-    # Leer el archivo de texto
-    lines = archivo.read().decode('utf-8').splitlines()
 
     # Encontrar la línea que contiene los eventos
     for i, line in enumerate(lines):
