@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-st.title('Vissualización de Logs')
+st.title('Visualización de Logs')
 
 # Ruta del archivo de texto
 archivo = st.file_uploader("Cargar archivo de texto (.txt)", type=["txt"])
@@ -53,7 +53,7 @@ if archivo is not None:
     ax.set_title('Estado de las Presiones a lo largo del tiempo')
     ax.legend()
 
-    # Buscar la configuración hidráulica en el archivo
+   # Buscar la configuración hidráulica en el archivo
     config_lines = []
     start_line = None
     end_line = None
@@ -65,10 +65,11 @@ if archivo is not None:
             end_line = i
             break
 
-    config_text = "".join(lines[start_line:end_line])
+    config_text = "\n".join(lines[start_line:end_line])
 
     ax.text(0.02, 0.98, config_text, transform=ax.transAxes,
             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
 
     # Mostrar el gráfico en Streamlit
     st.pyplot(fig)
