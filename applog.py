@@ -124,10 +124,10 @@ if archivo is not None:
     filtered_df = df[~df['EVENT ID'].str.contains("BATTERY STATUS \(CB\)|TEMPERATURE STATUS", regex=True)]
 
     # Obtener el top 10 de eventos más recurrentes
-    top_10_eventos = filtered_df['EVENT ID'].value_counts().head(10)
+    top_10_eventos = filtered_df['EVENT ID'].value_counts().head(20)
 
     # Mostrar el top 10 de eventos en Streamlit
-    st.write("Top 10 de eventos más recurrentes (excluyendo BATTERY STATUS y TEMPERATURE STATUS:")
+    st.write("Top 10 de eventos más recurrentes (excluyendo BATTERY STATUS y TEMPERATURE STATUS)")
     st.write(top_10_eventos)
 else:
     st.write(" ")
