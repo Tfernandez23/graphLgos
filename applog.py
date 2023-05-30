@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-st.title('Visualización de Logs')
+st.title('Visualización  de Logs')
 
 # Ruta del archivo de texto
 archivo = st.file_uploader("Cargar archivo de texto (.txt)", type=["txt"])
