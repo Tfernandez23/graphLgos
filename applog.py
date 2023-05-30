@@ -42,7 +42,7 @@ if archivo is not None:
     df["DATE"] = pd.to_datetime(df["DATE"])
 
     # Crear la visualización
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(12, 6))
     ax.plot(df["DATE"], df["Pline"], label="Pline")
     ax.plot(df["DATE"], df["P2"], label="P2")
     ax.plot(df["DATE"], df["P3"], label="P3")
