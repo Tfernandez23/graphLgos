@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
+st.set_page_config(layout="wide")
 st.title('Visualización de Logs')
 
 # Ruta del archivo de texto
@@ -41,38 +42,25 @@ if archivo is not None:
     # Convertir la columna "DATE" a formato de fecha
     df["DATE"] = pd.to_datetime(df["DATE"])
 
-    # Crear la visualización
-    fig, ax = plt.subplots(figsize=(12, 6))
-    ax.plot(df["DATE"], df["Pline"], label="Pline")
-    ax.plot(df["DATE"], df["P2"], label="P2")
-    ax.plot(df["DATE"], df["P3"], label="P3")
-    ax.plot(df["DATE"], df["Ppilot"], label="Ppilot")
-    ax.plot(df["DATE"], df["Ppower"], label="Ppower")
-    ax.set_xlabel("Fecha y Hora")
-    ax.set_ylabel("Presiones")
-    ax.set_title('Estado de las Presiones a lo largo del tiempo')
-    ax.legend()
+    # Crear la visualización con Plotly
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Pline"], name="Pline"))
+    fig.add_trace(go.Scatter(x=df["DATE"], y=df["P2"], name="P2"))
+    fig.add_trace(go.Scatter(x=df["DATE"], y=df["P3"], name="P3"))
+    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Ppilot"], name="Ppilot"))
+    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Ppower"], name="Ppower"))
 
-   # Buscar la configuración hidráulica en el archivo
-    config_lines = []
-    start_line = None
-    end_line = None
-
-    for i, line in enumerate(lines):
-        if "HYDRAULIC CONFIG" in line:
-            start_line = i + 1
-        elif start_line is not None and line.strip() == "":
-            end_line = i
-            break
-
-    config_text = "\n".join(lines[start_line:end_line])
-
-    ax.text(0.02, 0.98, config_text, transform=ax.transAxes,
-            verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
-
+    fig.update_layout(
+        title="Estado de las Presiones a lo largo del tiempo",
+        xaxis_title="Fecha y Hora",
+        yaxis_title="Presiones",
+        showlegend=True,
+        legend_title="Variables",
+        width=1300  # Ajustar el ancho de la figura
+    )
 
     # Mostrar el gráfico en Streamlit
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
     # Encontrar las líneas que contienen los datos de battery status
     battery_lines = [line.strip().split(";") for line in lines if "BATTERY STATUS" in line]
@@ -85,19 +73,48 @@ if archivo is not None:
     pb1_values = [float(entry[3].split(': ')[1]) for entry in battery_lines]
     pb2_values = [float(entry[4].split(': ')[1]) for entry in battery_lines]
 
-    # Crear el gráfico
-    fig, ax = plt.subplots(figsize=(12, 6))
-    ax.plot(dates, cb_values, label='CB')
-    ax.plot(dates, pb1_values, label='PB1')
-    ax.plot(dates, pb2_values, label='PB2')
-    ax.set_xlabel('Fecha y Hora')
-    ax.set_ylabel('Estado de la Batería')
-    ax.set_title('Estado de la Batería a lo largo del tiempo')
-    ax.legend()
-    plt.tight_layout()
+    # Crear el gráfico con Plotly
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=dates, y=cb_values, name='CB'))
+    fig.add_trace(go.Scatter(x=dates, y=pb1_values, name='PB1'))
+    fig.add_trace(go.Scatter(x=dates, y=pb2_values, name='PB2'))
+
+    fig.update_layout(
+        title="Estado de la Batería a lo largo del tiempo",
+        xaxis_title="Fecha y Hora",
+        yaxis_title="Estado de la Batería",
+        showlegend=True,
+        legend_title="Variables",
+        width=1300  # Ajustar el ancho de la figura
+    )
 
     # Mostrar el gráfico en Streamlit
-    st.pyplot(fig)
+    st.plotly_chart(fig)
+
+    # Encontrar las líneas que contienen los datos de temperatura
+    temperature_lines = [line.strip().split(";") for line in lines if "TEMPERATURE STATUS" in line]
+
+    # Extraer fechas y tiempos
+    dates_temperatures = [datetime.strptime(entry[0] + ' ' + entry[1], '%m/%d/%Y %H:%M:%S') for entry in temperature_lines]
+
+    # Extraer valores de temperatura
+    temperature_values = [float(entry[2].split(':')[1]) for entry in temperature_lines]
+
+    # Crear el gráfico con Plotly
+    fig_temperatures = go.Figure()
+    fig_temperatures.add_trace(go.Scatter(x=dates_temperatures, y=temperature_values, name='Temperatura'))
+
+    fig_temperatures.update_layout(
+        title="Estado de las Temperaturas a lo largo del tiempo",
+        xaxis_title="Fecha y Hora",
+        yaxis_title="Temperaturas",
+        showlegend=True,
+        legend_title="Variables",
+        width=1300  # Ajustar el ancho de la figura
+    )
+
+    # Mostrar el gráfico en Streamlit
+    st.plotly_chart(fig_temperatures)
 
     # Encontrar la línea que contiene los eventos
     for i, line in enumerate(lines):
@@ -124,10 +141,11 @@ if archivo is not None:
     filtered_df = df[~df['EVENT ID'].str.contains("BATTERY STATUS \(CB\)|TEMPERATURE STATUS", regex=True)]
 
     # Obtener el top 10 de eventos más recurrentes
-    top_10_eventos = filtered_df['EVENT ID'].value_counts().head(20)
+    top_10_eventos = filtered_df['EVENT ID'].value_counts().head(10)
 
     # Mostrar el top 10 de eventos en Streamlit
     st.write("Top 10 de eventos más recurrentes (excluyendo BATTERY STATUS y TEMPERATURE STATUS)")
     st.write(top_10_eventos)
+
 else:
     st.write(" ")
