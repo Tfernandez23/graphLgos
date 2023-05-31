@@ -22,7 +22,7 @@ if archivo is not None:
     # Encontrar la línea que contiene "NUMBER OF EVENTS: 2724"
     events_line = None
     for i, line in enumerate(lines):
-        if "NUMBER OF EVENTS: 2724" in line:
+        if "NUMBER OF EVENTS:" in line:
             events_line = i
             break
 
