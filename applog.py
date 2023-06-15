@@ -1,3 +1,5 @@
+#streamlit run your_script.py
+
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -44,11 +46,11 @@ if archivo is not None:
 
     # Crear la visualización con Plotly
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Pline"], name="Pline"))
-    fig.add_trace(go.Scatter(x=df["DATE"], y=df["P2"], name="P2"))
-    fig.add_trace(go.Scatter(x=df["DATE"], y=df["P3"], name="P3"))
-    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Ppilot"], name="Ppilot"))
-    fig.add_trace(go.Scatter(x=df["DATE"], y=df["Ppower"], name="Ppower"))
+    fig.add_trace(go.Scatter(x=df["DATE"] + pd.to_timedelta(df["TIME"]), y=df["Pline"], name="Pline"))
+    fig.add_trace(go.Scatter(x=df["DATE"] + pd.to_timedelta(df["TIME"]), y=df["P2"], name="P2"))
+    fig.add_trace(go.Scatter(x=df["DATE"] + pd.to_timedelta(df["TIME"]), y=df["P3"], name="P3"))
+    fig.add_trace(go.Scatter(x=df["DATE"] + pd.to_timedelta(df["TIME"]), y=df["Ppilot"], name="Ppilot"))
+    fig.add_trace(go.Scatter(x=df["DATE"] + pd.to_timedelta(df["TIME"]), y=df["Ppower"], name="Ppower"))
 
     fig.update_layout(
         title="Estado de las Presiones a lo largo del tiempo",
@@ -61,6 +63,7 @@ if archivo is not None:
 
     # Mostrar el gráfico en Streamlit
     st.plotly_chart(fig)
+
 
     # Encontrar las líneas que contienen los datos de battery status
     battery_lines = [line.strip().split(";") for line in lines if "BATTERY STATUS" in line]
@@ -141,11 +144,11 @@ if archivo is not None:
     filtered_df = df[~df['EVENT ID'].str.contains("BATTERY STATUS \(CB\)|TEMPERATURE STATUS", regex=True)]
 
     # Obtener el top 10 de eventos más recurrentes
-    top_10_eventos = filtered_df['EVENT ID'].value_counts().head(10)
+    todos_los_eventos = filtered_df['EVENT ID'].value_counts()
 
     # Mostrar el top 10 de eventos en Streamlit
-    st.write("Top 10 de eventos más recurrentes (excluyendo BATTERY STATUS y TEMPERATURE STATUS)")
-    st.write(top_10_eventos)
+    st.write("Eventos más recurrentes (excluyendo BATTERY STATUS y TEMPERATURE STATUS)")
+    st.write(todos_los_eventos)
 
 else:
     st.write(" ")
